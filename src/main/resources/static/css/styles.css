@@ -1,0 +1,53 @@
+body{
+    background-color:black;
+}
+
+
+.principal{
+    display: flex;
+    justify-content: center; /* centra horizontalmente */
+    align-items: center;     /* centra verticalmente */
+    height: 100vh;           /* asegura que el padre tenga altura */
+}
+
+.hijo {
+    background-color: white;
+    box-shadow: 0 4px 40px white;
+    width: 80%;
+    height: 80%;
+    overflow-y: auto;
+    
+}
+h1{
+    text-align: center;
+    padding: 25px;
+}
+
+table{
+    width: 75% !important;
+    margin: 0 auto;
+    justify-content: center;
+    padding: 25px;
+}
+
+td{
+    text-align: center;
+    padding: 10px;
+}
+tr{
+    margin:10px;
+}
+
+th{
+    text-align: center;
+}
+
+#map{
+    margin: 0 auto;
+    width: 50%;
+    height:50%;
+    justify-content: center;
+    padding:20px;
+    margin-bottom:20px;
+    border: 3px black solid;
+}
