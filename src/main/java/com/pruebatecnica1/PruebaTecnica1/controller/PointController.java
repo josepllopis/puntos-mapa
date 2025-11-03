@@ -1,44 +1,51 @@
 package com.pruebatecnica1.PruebaTecnica1.controller;
 
 import com.pruebatecnica1.PruebaTecnica1.model.Point;
+import com.pruebatecnica1.PruebaTecnica1.service.PointDao;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("api/v1/")
 public class PointController {
 
-    private final List<Point> listaPuntos = new ArrayList<>();
 
-    public PointController() {
-        listaPuntos.add(new Point(34.45,29.08,new Date()));
-        listaPuntos.add(new Point(41.48,48.98,new Date()));
-        listaPuntos.add(new Point(24.15,76.87,new Date()));
-        listaPuntos.add(new Point(64.29,33.90,new Date()));
-        listaPuntos.add(new Point(39.67,15.97,new Date()));
-        listaPuntos.add(new Point(94.21,45.45,new Date()));
-        listaPuntos.add(new Point(47.39,10.78,new Date()));
-        listaPuntos.add(new Point(30.65,22.45,new Date()));
-        listaPuntos.add(new Point(14.43,83.55,new Date()));
-        listaPuntos.add(new Point(0,0,new Date()));
-        listaPuntos.add(new Point(38.98,-0.47,new Date()));
-    }
-
+    public PointDao service;
 
 
     @GetMapping("/puntos")
     public ResponseEntity<List<Point>> devolverPuntos(){
-        return ResponseEntity.ok(listaPuntos);
+        return ResponseEntity.ok(service.devolverListaPuntos());
     }
 
-    @GetMapping("/hola")
-    public String holaMundo(){
-        return "Hola Mundo";
+    @PostMapping("/puntos")
+    public ResponseEntity<Point> addPunto(@RequestBody Point punto){
+        service.crearPunto(punto);
+        return ResponseEntity.ok(punto);
     }
+
+    @GetMapping("/puntos/{id}")
+    public ResponseEntity<Point> getPunto(@PathVariable Long id){
+        Optional<Point> punto = service.devolverPunto(id);
+
+        return punto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/puntos/{id}")
+    public ResponseEntity<Void> deletePunto(@PathVariable Long id){
+        Optional<Point> punto = service.devolverPunto(id);
+
+        if(punto.isPresent()){
+            service.eliminarPunto(id);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
 }
