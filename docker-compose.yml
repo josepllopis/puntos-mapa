@@ -4,7 +4,7 @@ services:
   puntos_mapa_app:
     build: .
     ports:
-      - "8087:8087"
+      - "8099:8099"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://puntos_mapa:3306/puntos?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: root
