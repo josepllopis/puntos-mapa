@@ -53,13 +53,14 @@ for(let punto of puntos){
       minute: '2-digit',
       second: '2-digit'
     });
-    let puntoHtml = ' <tr><td>'+punto.lat+'</td><td>'+punto.longi+'</td><td>'+fechaFormateada+'</td><td>'+botonInfo+'</td></tr>'
+    let puntoHtml = ' <tr><td>'+punto.nombre+'</td><td>'+punto.lat+'</td><td>'+punto.longi+'</td><td>'+fechaFormateada+'</td><td>'+botonInfo+'</td></tr>'
     listaPuntos+=puntoHtml;
 }
 
 listaPuntos+= ` <tr>
-                           <td colspan =2><input id="inLatitud" step="0.01" style="text-align:center; width:80%" type= number min=-90 max=90 placeholder = 'Ingresa la latitud'/></th>
-                           <td><input id="inLongitud" step="0.01" style="text-align:center; width:80%" type= number min=-180 max=180 placeholder = 'Ingresa la longitud'/></th>
+                            <td colspan=1><input id="inNombre" step="0.01" style="text-align:center; width:80%" type= text max=200 placeholder = 'Ingresa el nombre'/></th>
+                           <td colspan=2><input id="inLatitud" step="0.01" style="text-align:center; width:80%" type= number min=-90 max=90 placeholder = 'Ingresa la latitud'/></th>
+                           <td colspan=1><input id="inLongitud" step="0.01" style="text-align:center; width:80%" type= number min=-180 max=180 placeholder = 'Ingresa la longitud'/></th>
                            <td><a onclick="addPunto()" class="btn btn-danger btn-circle"><i class="fas fa-add"></i></a></th>
                          </tr>`;
 
@@ -90,11 +91,14 @@ async function addPunto(){
 
     let addLatitud = document.getElementById('inLatitud').value;
     let addLongitud = document.getElementById('inLongitud').value;
+    let addNombre = document.getElementById('inNombre').value;
 
     if(!addLatitud){
         alert('Introduce la latitud');
         return;
     }
+
+
 
     if(!addLongitud){
         alert('Introduce la longitud');
@@ -115,7 +119,8 @@ async function addPunto(){
    const datos = {
      lat: parseFloat(addLatitud),
      longi: parseFloat(addLongitud),
-     tiempo: new Date().toISOString()
+     nombre : addNombre
+     //tiempo: new Date().toISOString()
    };
 
     const request = await fetch('/api/v1/puntos', {
