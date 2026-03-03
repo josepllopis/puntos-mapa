@@ -1,36 +1,55 @@
 package com.pruebatecnica1.PruebaTecnica1.service;
 
+import com.pruebatecnica1.PruebaTecnica1.dto.PointDTO;
+import com.pruebatecnica1.PruebaTecnica1.exception.NotPointException;
+import com.pruebatecnica1.PruebaTecnica1.mapper.MapperPoint;
 import com.pruebatecnica1.PruebaTecnica1.model.Point;
 import com.pruebatecnica1.PruebaTecnica1.repositories.PointRepository;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.apache.catalina.mapper.Mapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PointDaoImpl implements PointDao{
 
-    PointRepository repository;
+    private final PointRepository repository;
+    private final MapperPoint mapper;
 
     @Override
-    public Point crearPunto(Point punto) {
-        return repository.save(punto);
+    public PointDTO crearPunto(PointDTO punto) {
+        Point puntoNuevo = Point.builder()
+                .lat(punto.getLat())
+                .longi(punto.getLongi())
+                .nombre(punto.getNombre())
+                .tiempo(new Date())
+                .build();
+
+        return mapper.toDTO(repository.save(puntoNuevo));
     }
 
     @Override
-    public Optional<Point> devolverPunto(Long id) {
-        return repository.findById(id);
+    public PointDTO devolverPunto(Long id) {
+        return repository.findById(id).map(mapper::toDTO).orElseThrow(()->new NotPointException("No existe ese punto"));
     }
 
     @Override
-    public List<Point> devolverListaPuntos() {
-        return repository.findAll();
+    public List<PointDTO> devolverListaPuntos() {
+        return repository.findAll().stream().map(mapper::toDTO).toList();
     }
 
     @Override
-    public void eliminarPunto(Long id) {
-        repository.deleteById(id);
+    public boolean eliminarPunto(Long id) {
+        if(repository.existsById(id)){
+            repository.deleteById(id);
+            return true;
+        }
+            return false;
+
     }
 }
